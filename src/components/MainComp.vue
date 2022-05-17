@@ -1,14 +1,18 @@
 <template>
   <main>
     <div class="_container">
-      <div class="container-fluid">
+      <div v-if="isLoaded" class="container-fluid">
         <div class="row flex-wrap">
 
           <CardComp v-for="(album, index) in albums" :key="`album-${index}}`"
            :album="album"/>
 
         </div>
+
       </div>
+
+      <GifComp v-else />
+
     </div>
   </main>
 </template>
@@ -16,9 +20,10 @@
 <script>
 import CardComp from './CardComp.vue';
 import axios from 'axios';
+import GifComp from './GifComp.vue';
 
 export default {
-  components: { CardComp },
+  components: { CardComp, GifComp },
   name: 'MainComp',
 
   data() {
@@ -27,6 +32,8 @@ export default {
       apiUrl: 'https://flynn.boolean.careers/exercises/api/array/music',
 
       albums: [],
+
+      isLoaded: false,
     }
   },
 
@@ -38,7 +45,8 @@ export default {
     getApi() {
       axios.get(this.apiUrl)
         .then(file => {
-          this.albums = file.data.response
+          this.albums = file.data.response;
+          this.isLoaded = true;
         })
     }
   }
@@ -53,6 +61,7 @@ export default {
 
     ._container {
       width: 70%;
+      height: 100%;
       margin: auto;
 
       ._col {
